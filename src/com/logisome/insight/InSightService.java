@@ -34,9 +34,9 @@ public class InSightService extends Service {
 	@Override
 	public int onStartCommand(Intent i, int flags, int startId) {
 		
-		Intent captureActivity = new Intent(this, CaptureActivity.class);
-		captureActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		getApplication().startActivity(captureActivity);
+		Intent scanActivity = new Intent(this, ScanActivity.class);
+		scanActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		getApplication().startActivity(scanActivity);
 		
 		return START_STICKY;
 	}
