@@ -50,6 +50,12 @@
         	</intent-filter>
         </activity>
         
+        <activity
+            android:name="com.logisome.insight.MainActivity"
+            android:label="@string/app_name" >
+            
+        </activity>
+        
         <service
             android:name="com.logisome.insight.InSightService"
             android:enabled="true"

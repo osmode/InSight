@@ -75,6 +75,11 @@ public class ScanActivity extends Activity {
 			String qrData = data.getStringExtra(Intents.Scan.RESULT);
 			
 			Log.d(TAG, "QR Code data: " + qrData);
+			
+			// try pulling user data; if successful, 
+			Intent i = new Intent(this, MainActivity.class);
+			finish();
+			startActivity(i);
 		}
 	}
 	
