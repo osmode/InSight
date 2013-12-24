@@ -78,6 +78,7 @@ public class ScanActivity extends Activity {
 			
 			// try pulling user data; if successful, 
 			Intent i = new Intent(this, MainActivity.class);
+			i.putExtra(MainActivity.EXTRA_USERNAME, qrData);
 			finish();
 			startActivity(i);
 		}

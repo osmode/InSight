@@ -47,7 +47,7 @@ public class DataStore {
 		return sDataStore;
 	}
 	
-	private void parseJSON(JSONObject obj) {
+	public void parseJSON(JSONObject obj) {
 		try {
 			mUsername = (String)obj.get("username");
 			mFunFact = (String)obj.get("fun_fact");
