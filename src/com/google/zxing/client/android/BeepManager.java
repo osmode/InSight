@@ -27,7 +27,7 @@ import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.codyengel.helloglass.R;
+import com.logisome.insight.R;
 
 /**
  * Manages beeps and vibrations for {@link CaptureActivity}.

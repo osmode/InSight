@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.android.glass.app.Card;
+import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
 import com.google.zxing.client.android.CaptureActivity;
 import com.google.zxing.client.android.Intents;
@@ -28,6 +29,7 @@ public class ScanActivity extends Activity {
 	static final int AUTOSCROLL_WAIT = 1500;
 	
 	private static final String TAG = "ScanActivity";
+		
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +84,9 @@ public class ScanActivity extends Activity {
 			finish();
 			startActivity(i);
 		}
+		
+		
+		
 	}
 	
-	
-
 }

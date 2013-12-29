@@ -30,7 +30,7 @@ import android.view.View;
 
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.camera.CameraManager;
-import com.codyengel.helloglass.R;
+import com.logisome.insight.R;
 
 
 /**

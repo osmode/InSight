@@ -9,7 +9,8 @@
     
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="show_remedy_voice_trigger">launch InSight</string>
+    <string name="show_remedy_voice_trigger">launch Remedy</string>
+    <string name="show_insight_voice_trigger">launch Insight</string>
     
     <string name="call">Call Expert</string>
     <string name="take_photo">Take Photo</string>

@@ -16,12 +16,15 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import com.google.android.glass.app.Card;
 import com.google.android.glass.widget.CardScrollView;
@@ -31,18 +34,37 @@ public class MainActivity extends Activity {
 	private List<Card> mCards;
 	private CardScrollView mCardScrollView;
 	
-	private static final String BASE_URL = "http://162.243.213.58/api/users/osmode";
+	private static final String BASE_URL = "http://162.243.213.58/api/users/";
 	public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
 	private static final String TAG = "MainActivity";
+	private int mResponseCode;
+	
+	public int getResponseCode() {
+		return mResponseCode;
+	}
+
+	public void setResponseCode(int responseCode) {
+		mResponseCode = responseCode;
+	}
+
+	public static final int RESPONSE_FOUND_USER = 1;
+	public static final int RESPONSE_USER_NOT_FOUND = 0;
 
 	private String username;
-
 	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		username = getIntent().getStringExtra(EXTRA_USERNAME);
+		setUsername(getIntent().getStringExtra(EXTRA_USERNAME));
 		
 		new FetchItemsTask().execute();
 		
@@ -65,16 +87,34 @@ public class MainActivity extends Activity {
 		});
 	}
 	
+    // when Glass is tapped, inflate the options menu (defined in remedy.xml)
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+          if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+        	  Log.d(TAG, "Finishing activity");
+        	  finish();
+          }
+          return false;
+    }
+    
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+    	
+    	Log.d(TAG, "Key code: "+keyCode);
+    	
+    	if (keyCode == 4) {
+    		Log.d(TAG, "Swiped down");
+    		finish();
+    		Intent i = new Intent(this, ScanActivity.class);
+    		startActivity(i);
+    		
+    		return true;
+    	}
+    	return false;
+    }
+	
 	private void createCards() {
 		mCards = new ArrayList<Card>();
-		
-		String username = DataStore.get(getApplication()).getUsername();
-		String funfact = DataStore.get(getApplication()).getFunFact();
-		String workingOn = DataStore.get(getApplication()).getWorkingOn();
-		String afraidOf = DataStore.get(getApplication()).getAfraidOf();
-		String favQuote = DataStore.get(getApplication()).getFavQuote();
-		String event = DataStore.get(getApplication()).getEvent();
-		String contact = DataStore.get(getApplication()).getContact();
 		
 		// create cards 
 		Card usernameCard = new Card(this);
@@ -85,14 +125,15 @@ public class MainActivity extends Activity {
 		Card eventCard = new Card(this);
 		Card contactCard = new Card(this);
 		
-		// populate cards based on pulled data in DataStore
-		usernameCard.setText(username);
-		funfactCard.setText(funfact);
-		workingOnCard.setText(workingOn);
-		afraidOfCard.setText(afraidOf);
-		favQuoteCard.setText(favQuote);
-		eventCard.setText(event);
-		contactCard.setText(contact);
+		//populate cards based on pulled data in DataStore
+		
+		usernameCard.setFootnote("username");
+		funfactCard.setFootnote("status");
+		workingOnCard.setFootnote("working on");
+		afraidOfCard.setFootnote("afraid of");
+		favQuoteCard.setFootnote("fav quote");
+		eventCard.setFootnote("fav book/film/show/concert");
+		contactCard.setFootnote("contact");
 		
 		// add cards to mCards
 		mCards.add(usernameCard);
@@ -102,6 +143,26 @@ public class MainActivity extends Activity {
 		mCards.add(favQuoteCard);
 		mCards.add(eventCard);
 		mCards.add(contactCard);
+		
+	}
+	
+	private void updateCards() {
+		
+		String username = DataStore.get(getApplication()).getUsername();
+		String funfact = DataStore.get(getApplication()).getFunFact();
+		String workingOn = DataStore.get(getApplication()).getWorkingOn();
+		String afraidOf = DataStore.get(getApplication()).getAfraidOf();
+		String favQuote = DataStore.get(getApplication()).getFavQuote();
+		String event = DataStore.get(getApplication()).getEvent();
+		String contact = DataStore.get(getApplication()).getContact();
+		
+		mCards.get(0).setText(username);
+		mCards.get(1).setText(funfact);
+		mCards.get(2).setText(workingOn);
+		mCards.get(3).setText(afraidOf);
+		mCards.get(4).setText(favQuote);
+		mCards.get(5).setText(event);
+		mCards.get(6).setText(contact);
 		
 	}
 	
@@ -118,6 +179,8 @@ public class MainActivity extends Activity {
 			Log.d(TAG, "Response line: " + response.getStatusLine().toString());
 			
 			HttpEntity entity = response.getEntity();
+			setResponseCode(response.getStatusLine().getStatusCode());
+			Log.d(TAG, "Response code: " + getResponseCode());
 			
 			if (entity != null) {
 				
@@ -168,7 +231,7 @@ public class MainActivity extends Activity {
     	@Override
     	protected Void doInBackground(Void...params) {
     		try {
-    			pullUserData(BASE_URL);
+    			pullUserData(BASE_URL + getUsername());
     		} catch (Exception e) {
     			Log.e(TAG, "Failed to fetch URL: ", e);
     		}
@@ -178,8 +241,29 @@ public class MainActivity extends Activity {
     	
     	@Override
     	protected void onPostExecute(Void v) {
-    		createCards();
+    		
+    		// if no user was found, show error toast and return to ScanActivity
+    		if (getResponseCode() == 200 ) {
+        		//Toast toast = Toast.makeText(getApplicationContext(), "User found", Toast.LENGTH_SHORT);
+        		//toast.show();
+    		} else {
+    			
+	    		Toast toast = Toast.makeText(getApplicationContext(), "Unable to find user", Toast.LENGTH_SHORT);
+	    		toast.show();
+	    		finish();
+	    		startScanActivity();
+	    		
+    		}
+    		
+    		updateCards();
+    		mCardScrollView.updateViews(true);
     	}
     }
-	
+    
+    private void startScanActivity() {
+		Intent i = new Intent(this, ScanActivity.class);
+		startActivity(i);
+    }
+    
 }
+
