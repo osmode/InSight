@@ -107,13 +107,15 @@ public final class R {
         public static final int brett=0x7f050002;
         public static final int disconnect=0x7f050003;
         public static final int foorplan=0x7f050004;
-        public static final int incoming=0x7f050005;
-        public static final int noor=0x7f050006;
-        public static final int outgoing=0x7f050007;
-        public static final int peterserp=0x7f050008;
-        public static final int robfilk=0x7f050009;
-        public static final int siavash=0x7f05000a;
-        public static final int suesiegel=0x7f05000b;
+        public static final int gina=0x7f050005;
+        public static final int incoming=0x7f050006;
+        public static final int logo2=0x7f050007;
+        public static final int noor=0x7f050008;
+        public static final int outgoing=0x7f050009;
+        public static final int peterserp=0x7f05000a;
+        public static final int robfilk=0x7f05000b;
+        public static final int siavash=0x7f05000c;
+        public static final int suesiegel=0x7f05000d;
     }
     public static final class string {
         public static final int accept_call=0x7f09000e;

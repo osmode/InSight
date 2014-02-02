@@ -9,14 +9,13 @@ public class DataStore {
 
 	private static DataStore sDataStore;
 	private Context mAppContext;
-	private String mUsername;
-	private String mFunFact;
+	
+	private String mStatus;
 	private String mWorkingOn;
-	private String mAfraidOf;
+	private String mRelationship;
+	private String mInterestedIn;
 	private String mFavQuote;
 	private String mEvent;
-	private String mContact;
-	
 	
 	private DataStore(Context appContext) {
 		mAppContext = appContext;
@@ -51,45 +50,65 @@ public class DataStore {
 	
 	public void parseJSON(JSONObject obj) {
 		try {
-			mUsername = (String)obj.get("username");
-			mFunFact = (String)obj.get("funfact");
+			
+			mStatus = (String)obj.get("status");
 			mWorkingOn = (String)obj.get("workingon");
-			mAfraidOf = (String)obj.get("afraidof");
+			mRelationship = (String)obj.get("relationship");
+			mInterestedIn = (String)obj.get("interestedin");
 			mFavQuote = (String)obj.get("favquote");
 			mEvent = (String)obj.get("event");
-			mContact = (String)obj.get("contact");
 				
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-
-	public String getUsername() {
-		return mUsername;
+	
+	public String getStatus() {
+		return mStatus;
 	}
 
-	public String getFunFact() {
-		return mFunFact;
+	public void setStatus(String status) {
+		mStatus = status;
 	}
 
 	public String getWorkingOn() {
 		return mWorkingOn;
 	}
 
-	public String getAfraidOf() {
-		return mAfraidOf;
+	public void setWorkingOn(String workingOn) {
+		mWorkingOn = workingOn;
+	}
+
+	public String getRelationship() {
+		return mRelationship;
+	}
+
+	public void setRelationship(String relationship) {
+		mRelationship = relationship;
+	}
+
+	public String getInterestedIn() {
+		return mInterestedIn;
+	}
+
+	public void setInterestedIn(String interestedIn) {
+		mInterestedIn = interestedIn;
 	}
 
 	public String getFavQuote() {
 		return mFavQuote;
 	}
 
+	public void setFavQuote(String favQuote) {
+		mFavQuote = favQuote;
+	}
+
 	public String getEvent() {
 		return mEvent;
 	}
 
-	public String getContact() {
-		return mContact;
+	public void setEvent(String event) {
+		mEvent = event;
 	}
 	
 	

@@ -36,7 +36,7 @@ final class BeepManager {
 
   private static final String TAG = BeepManager.class.getSimpleName();
 
-  private static final float BEEP_VOLUME = 0.10f;
+  private static final float BEEP_VOLUME = 0.00f;
   private static final long VIBRATE_DURATION = 200L;
 
   private final Activity activity;
@@ -68,7 +68,7 @@ final class BeepManager {
   }
 
   private static boolean shouldBeep(SharedPreferences prefs, Context activity) {
-    boolean shouldPlayBeep = true;
+    boolean shouldPlayBeep = false;
     if (shouldPlayBeep) {
       // See if sound settings overrides this
       AudioManager audioService = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);

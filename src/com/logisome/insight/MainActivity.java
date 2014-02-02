@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
@@ -34,7 +36,7 @@ public class MainActivity extends Activity {
 	private List<Card> mCards;
 	private CardScrollView mCardScrollView;
 	
-	private static final String BASE_URL = "http://162.243.213.58/api/users/";
+	private static final String BASE_URL = "http://insightforglass.com/api/users/";
 	public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
 	private static final String TAG = "MainActivity";
 	private int mResponseCode;
@@ -63,6 +65,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		setUsername(getIntent().getStringExtra(EXTRA_USERNAME));
 		
@@ -91,7 +94,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
           if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-        	  Log.d(TAG, "Finishing activity");
+        	  //Log.d(TAG, "Finishing activity");
         	  finish();
           }
           return false;
@@ -100,10 +103,10 @@ public class MainActivity extends Activity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
     	
-    	Log.d(TAG, "Key code: "+keyCode);
+    	//Log.d(TAG, "Key code: "+keyCode);
     	
     	if (keyCode == 4) {
-    		Log.d(TAG, "Swiped down");
+    		//Log.d(TAG, "Swiped down");
     		finish();
     		Intent i = new Intent(this, ScanActivity.class);
     		startActivity(i);
@@ -115,55 +118,57 @@ public class MainActivity extends Activity {
 	
 	private void createCards() {
 		mCards = new ArrayList<Card>();
-		
+	
 		// create cards 
-		Card usernameCard = new Card(this);
-		Card funfactCard = new Card(this);
+		Card statusCard = new Card(this);
 		Card workingOnCard = new Card(this);
-		Card afraidOfCard = new Card(this);
+		Card relationshipCard = new Card(this);
+		Card interestedInCard = new Card(this);
 		Card favQuoteCard = new Card(this);
 		Card eventCard = new Card(this);
-		Card contactCard = new Card(this);
 		
 		//populate cards based on pulled data in DataStore
 		
-		usernameCard.setFootnote("username");
-		funfactCard.setFootnote("status");
+		statusCard.setFootnote("status");
 		workingOnCard.setFootnote("working on");
-		afraidOfCard.setFootnote("afraid of");
+		relationshipCard.setFootnote("relationship status");
+		interestedInCard.setFootnote("interested in");
 		favQuoteCard.setFootnote("fav quote");
-		eventCard.setFootnote("fav book/film/show/concert");
-		contactCard.setFootnote("contact");
+		eventCard.setFootnote("last cool book/concert/movie");
 		
 		// add cards to mCards
-		mCards.add(usernameCard);
-		mCards.add(funfactCard);
+		mCards.add(statusCard);
 		mCards.add(workingOnCard);
-		mCards.add(afraidOfCard);
+		mCards.add(relationshipCard);
+		mCards.add(interestedInCard);
 		mCards.add(favQuoteCard);
 		mCards.add(eventCard);
-		mCards.add(contactCard);
 		
 	}
 	
 	private void updateCards() {
 		
-		String username = DataStore.get(getApplication()).getUsername();
-		String funfact = DataStore.get(getApplication()).getFunFact();
-		String workingOn = DataStore.get(getApplication()).getWorkingOn();
-		String afraidOf = DataStore.get(getApplication()).getAfraidOf();
+		String status = DataStore.get(getApplication()).getStatus();
+		String workingon = DataStore.get(getApplication()).getWorkingOn();
+		String relationship = DataStore.get(getApplication()).getRelationship();
+		String interestedin = DataStore.get(getApplication()).getInterestedIn();
 		String favQuote = DataStore.get(getApplication()).getFavQuote();
 		String event = DataStore.get(getApplication()).getEvent();
-		String contact = DataStore.get(getApplication()).getContact();
 		
-		mCards.get(0).setText(username);
-		mCards.get(1).setText(funfact);
-		mCards.get(2).setText(workingOn);
-		mCards.get(3).setText(afraidOf);
+		mCards.get(0).setText(status);
+		mCards.get(1).setText(workingon);
+		mCards.get(2).setText(relationship);
+		mCards.get(3).setText(interestedin);
 		mCards.get(4).setText(favQuote);
-		mCards.get(5).setText(event);
-		mCards.get(6).setText(contact);
+		mCards.get(5).setText(event);	
 		
+		// iterate through all cards, popping each blank one
+		ListIterator<Card> iter = mCards.listIterator();
+		while (iter.hasNext()) {
+			if(iter.next().getText().length() == 0) {
+				iter.remove();
+			}
+		}
 	}
 	
 	private void pullUserData(String url) {
@@ -172,24 +177,24 @@ public class MainActivity extends Activity {
 		HttpResponse response;
 		JSONObject jsonObject;
 		
-		Log.d(TAG, "Trying to pull data from " + url);
+		//Log.d(TAG, "Trying to pull data from " + url);
 		
 		try {
 			response = client.execute(httpget);
-			Log.d(TAG, "Response line: " + response.getStatusLine().toString());
+			//Log.d(TAG, "Response line: " + response.getStatusLine().toString());
 			
 			HttpEntity entity = response.getEntity();
 			setResponseCode(response.getStatusLine().getStatusCode());
-			Log.d(TAG, "Response code: " + getResponseCode());
+			//Log.d(TAG, "Response code: " + getResponseCode());
 			
 			if (entity != null) {
 				
 				InputStream instream = entity.getContent();
 				String result = convertStreamToString(instream);
-				Log.d(TAG, "Result: " + result);
+				//Log.d(TAG, "Result: " + result);
 				jsonObject = new JSONObject(result);
 				
-				Log.d(TAG, "Working on: " + jsonObject.getString("workingon"));
+				//Log.d(TAG, "Working on: " + jsonObject.getString("workingon"));
 				
 				DataStore.get(getApplicationContext()).parseJSON(jsonObject);
 				instream.close();
