@@ -28,6 +28,7 @@ public class ScanActivity extends Activity {
 	private Handler mHandler;
 	
 	static final int QR_SCAN_REQUEST = 10;
+	static final int LOCATE_REQUEST = 20;
 	static final int AUTOSCROLL_WAIT = 1500;
 	
 	private static final String TAG = "ScanActivity";
@@ -53,6 +54,9 @@ public class ScanActivity extends Activity {
 				if (position == 0) {
 					Intent i = new Intent (ctx, CaptureActivity.class);
 					startActivityForResult(i, QR_SCAN_REQUEST);
+				} else if (position ==1) {  // locate card
+					Intent i = new Intent(ctx, LocateActivity.class);
+					startActivityForResult(i, LOCATE_REQUEST);
 				}
 			}
 		});
@@ -62,14 +66,20 @@ public class ScanActivity extends Activity {
 	private void createCards() {
 		mCards = new ArrayList<Card>();
 		
-		Card card;
+		Card scanCard;
+		Card locateCard;
 		
-		card = new Card(this);
-		card.setText("Tap to scan QR code");
-		card.setFootnote("insightforglass.com");
+		scanCard = new Card(this);
+		locateCard = new Card(this);
+		
+		scanCard.setText("Tap to scan QR code");
+		scanCard.setFootnote("insightforglass.com");
 		Uri imageUri = Uri.parse("android.resource://com.logisome.insight/raw/logo2");
-		card.addImage(imageUri);
-		mCards.add(card);
+		scanCard.addImage(imageUri);
+		
+		locateCard.setText("Location users nearby");
+		mCards.add(scanCard);
+		mCards.add(locateCard);
 	}
 	
 	// called after CaptureACtivity finishes (i.e. QR Code reader)
