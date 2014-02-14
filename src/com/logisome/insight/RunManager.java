@@ -26,7 +26,6 @@ public class RunManager {
 		if (sRunManager == null) {
 			// use application context to avoid leaking activities
 			sRunManager = new RunManager(c.getApplicationContext());
-		
 		}
 		return sRunManager;
 	}
@@ -52,7 +51,7 @@ public class RunManager {
 		
 		for (String provider : providers) {
 			mLocationManager.requestLocationUpdates(provider, 0, 0, pi);
-		}
+		} 
 		
 	}
 	
@@ -67,5 +66,6 @@ public class RunManager {
 	public boolean isTrackingRun() {
 		return getLocationPendingIntent(false) != null;
 	}
+	
 	
 }
