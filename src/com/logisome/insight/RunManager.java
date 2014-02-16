@@ -52,7 +52,6 @@ public class RunManager {
 		for (String provider : providers) {
 			mLocationManager.requestLocationUpdates(provider, 0, 0, pi);
 		} 
-		
 	}
 	
 	public void stopLocationUpdates() {

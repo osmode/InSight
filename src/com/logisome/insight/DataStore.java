@@ -1,25 +1,32 @@
 package com.logisome.insight;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 public class DataStore {
 
 	private static DataStore sDataStore;
 	private Context mAppContext;
 	
+	private static final String TAG = "DataStore";
 	private String mStatus;
 	private String mWorkingOn;
 	private String mRelationship;
 	private String mInterestedIn;
 	private String mFavQuote;
 	private String mEvent;
+	private List<String> mNeighbors = new ArrayList<String>();
 	
 	private DataStore(Context appContext) {
 		mAppContext = appContext;
-	
+		
 		// create and initialize sample JSON object
 		/*
 		JSONObject myProfile = new JSONObject();
@@ -58,6 +65,23 @@ public class DataStore {
 			mFavQuote = (String)obj.get("favquote");
 			mEvent = (String)obj.get("event");
 				
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void parseUserList(JSONObject obj) {
+		try {
+			JSONArray jsonArray = obj.getJSONArray("username_list");
+			Log.d(TAG, "parseUserList called");
+			for (int i = 0; i < jsonArray.length(); i++) {
+				String name = jsonArray.getString(i);
+				Log.d(TAG, "extracted name: " + name);
+				if (name != null) {
+					Log.d(TAG, "Number of users: " + mNeighbors.size());
+					mNeighbors.add(name);
+				}
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -109,6 +133,10 @@ public class DataStore {
 
 	public void setEvent(String event) {
 		mEvent = event;
+	}
+	
+	public List<String> getNeighbors() {
+		return mNeighbors;
 	}
 	
 	

@@ -53,6 +53,11 @@
         </activity>
         
         <activity
+            android:name="com.logisome.insight.ProfileActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity
             android:name="com.logisome.insight.LocateActivity"
             android:label="@string/app_name">
             
